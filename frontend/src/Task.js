@@ -8,7 +8,7 @@ function Task(props) {
       <button>Remove</button>
       <button>Promote</button>
       <button>Demote</button>
-      <h2>Task: {props.text}</h2>
+      <h2>{props.text}</h2>
     </div>
   );
 }

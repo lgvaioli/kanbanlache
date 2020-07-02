@@ -6,31 +6,23 @@ import Task from './Task'
 class Section extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      name: props.name,
-      tasks: [],
-    };
   }
 
-  onClick = () => {
-    const tasks = this.state.tasks.slice();
-    tasks.push('new task');
-    this.setState({
-      tasks: tasks,
-    });
+  handleChange = (event) => {
+    this.props.updateTaskInput(event.target.value);
   }
 
   render() {
-    const tasks = this.state.tasks.map((el) => <Task text={el}/>)
+    const tasks = this.props.tasks.map((el) => <Task text={el}/>)
 
     return (
       <div>
         <div className={styles.Section}>
-          <h2>{this.state.name}</h2>
+          <h2>{this.props.name}</h2>
           {tasks}
         </div>
-        <button onClick={this.onClick}>Add task</button>
+        <input type='text' value={this.props.taskInput} onChange={this.handleChange}/>
+        <button onClick={this.props.onAddTask}>Add task</button>
       </div>
     );
   }
