@@ -1,0 +1,16 @@
+* {
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+}
+
+.Board {
+    background-color: mediumslateblue;
+    padding: 20px;
+    min-height: 80vh;
+}
+
+h2 {
+    margin-bottom: 20px;
+    text-align: center;
+}
