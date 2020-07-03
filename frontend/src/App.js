@@ -4,15 +4,11 @@ import Board from './Board';
 
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <div className={styles.App}>
         <h1>Kanbanlache</h1>
-        <Board name='Board' sections={['TODO', 'DOING', 'DONE']} />
+        <Board name='Board' sectionNames={['TODO', 'DOING', 'DONE']} />
       </div>
     );
   }

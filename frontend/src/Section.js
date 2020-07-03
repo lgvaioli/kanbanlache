@@ -4,16 +4,20 @@ import Task from './Task'
 
 
 class Section extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   handleChange = (event) => {
     this.props.updateTaskInput(event.target.value);
   }
 
   render() {
-    const tasks = this.props.tasks.map((el) => <Task text={el}/>)
+    const tasks = this.props.tasks.map((task, index) =>
+      <Task
+        key={index}
+        index={index}
+        text={task}
+        onTaskPromote={this.props.onTaskPromote}
+        onTaskDemote={this.props.onTaskDemote}
+        onTaskRemove={this.props.onTaskRemove}
+      />);
 
     return (
       <div>
@@ -21,11 +25,16 @@ class Section extends React.Component {
           <h2>{this.props.name}</h2>
           {tasks}
         </div>
-        <input type='text' value={this.props.taskInput} onChange={this.handleChange}/>
-        <button onClick={this.props.onAddTask}>Add task</button>
+        {this.props.hasTaskAdder && <input type='text' value={this.props.taskInput} onChange={this.handleChange}/>}
+        {this.props.hasTaskAdder && <button onClick={this.props.onAddTask}>Add task</button>}
       </div>
     );
   }
 }
+
+Section.defaultProps = {
+  name: 'Section',
+  hasTaskAdder: false,
+};
 
 export default Section;
