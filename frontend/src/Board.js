@@ -39,6 +39,11 @@ class Board extends React.Component {
   }
 
   onAddTask = (sectionIndex) => {
+    // Tasks can't be empty
+    if (this.state.taskInput[sectionIndex] === '') {
+      return alert("You can't add an empty task!");
+    }
+
     const tasks = this.state.tasks.slice();
     tasks[sectionIndex].push(this.state.taskInput[sectionIndex]);
 
@@ -84,6 +89,11 @@ class Board extends React.Component {
   }
 
   onTaskRemove = (sectionIndex, taskIndex) => {
+    // Show confirm dialogue first
+    if (!window.confirm('Are you sure you want to remove this task?')) {
+      return;
+    }
+
     const tasks = this.state.tasks.slice();
     tasks[sectionIndex].splice(taskIndex, 1);
 

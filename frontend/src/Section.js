@@ -2,7 +2,26 @@ import React from 'react';
 import styles from './Section.module.css'
 import Task from './Task'
 
-
+/**
+ * Section component. Contains Tasks.
+ * 
+ * Props:
+ *  - name (String): Optional. A name to display atop the Section. Defaults to 'Section'.
+ *  - tasks (Array of Strings): Required. The tasks this Section contains.
+ *  - hasTaskAdder (Boolean): Optional. Whether this section has a controlled input and button to
+ * add a task. Defaults to false.
+ *  - taskInput (String): Required. The string which represents the value of the controlled input.
+ *  - updateTaskInput (Callback): Required. Callback of the form (value) => { } which is called when
+ * the controlled input is updated.
+ *  - onAddTask (Callback): Required. Callback of the form () => { } which is called when the "Add task"
+ * button is clicked.
+ *  - onTaskPromote (Callback): Required. Callback of the form (taskIndex) => { } which is passed on
+ * to Tasks.
+ *  - onTaskDemote (Callback): Required. Callback of the form (taskIndex) => { } which is passed on
+ * to Tasks.
+ *  - onTaskRemove (Callback): Required. Callback of the form (taskIndex) => { } which is passed on
+ * to Tasks.
+ */
 class Section extends React.Component {
   handleChange = (event) => {
     this.props.updateTaskInput(event.target.value);
