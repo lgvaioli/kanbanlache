@@ -130,6 +130,19 @@ class Board extends React.Component {
     // Calculate width (percentage) dynamically and set it with inline CSS.
     const sectionWidth = (100 / sectionNames.length) - SECTIONS_GAP;
 
+    /**
+     * Sections are created with the following attributes:
+     * First section: Tasks are editable and are not demotable.
+     * Middle sections: Tasks are not editable, and are both demotable and promotable.
+     * Last section: Tasks are not editable, and are not promotable.
+     * 
+     * In other words: You can only edit a Task in the first section and you can't move
+     * a Task "to the left" if it is in the left-most Section, mutatis mutandis
+     * for movement to the right.
+     * 
+     * The way this is implemented is by checking the Section index to determine whether
+     * the current Section is the first/last or a middle Section.
+     */
     const sectionsContainer = sectionNames.map((name, index) =>
       <div key={name} style={{ width: `${sectionWidth.toString()}%`, }}>
         <Section
@@ -143,6 +156,10 @@ class Board extends React.Component {
           onTaskDemote={(taskIndex) => this.onTaskDemote(index, taskIndex)}
           onTaskRemove={(taskIndex) => this.onTaskRemove(index, taskIndex)}
           onTaskUpdate={(taskIndex, text) => this.onTaskUpdate(index, taskIndex, text)}
+          taskEditable={index === 0}
+          taskRemovable={true}
+          taskPromotable={index !== sectionNames.length - 1}
+          taskDemotable={index !== 0}
         />
       </div>);
 

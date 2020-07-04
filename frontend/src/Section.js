@@ -15,6 +15,9 @@ import Task from './Task'
  * the controlled input is updated.
  *  - onAddTask (Callback): Required. Callback of the form () => { } which is called when the "Add task"
  * button is clicked.
+ * 
+ *  The following props are just drilling for Task.
+ * 
  *  - onTaskPromote (Callback): Required. Callback of the form (taskIndex) => { } which is passed on
  * to Tasks.
  *  - onTaskDemote (Callback): Required. Callback of the form (taskIndex) => { } which is passed on
@@ -23,6 +26,10 @@ import Task from './Task'
  * to Tasks.
  *  - onTaskUpdate (Callback): Required. Callback of the form (taskIndex, text) => { } which is passed on
  * to Tasks.
+ *  - taskEditable (Boolean): Optional. Indicates whether the Tasks in this Section are editable.
+ *  - taskRemovable (Boolean): Optional. Indicates whether the Tasks in this section are removable.
+ *  - taskPromotable (Boolean): Optional. Indicates whether the Tasks in this section are promotable.
+ *  - taskDemotable (Boolean): Optional. Indicates whether the Tasks in this section are demotable.
  */
 class Section extends React.Component {
   handleChange = (event) => {
@@ -39,6 +46,10 @@ class Section extends React.Component {
         onTaskDemote={this.props.onTaskDemote}
         onTaskRemove={this.props.onTaskRemove}
         onTaskUpdate={this.props.onTaskUpdate}
+        editable={this.props.taskEditable}
+        removable={this.props.taskRemovable}
+        promotable={this.props.taskPromotable}
+        demotable={this.props.taskDemotable}
       />);
 
     return (
