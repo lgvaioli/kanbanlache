@@ -21,6 +21,8 @@ import Task from './Task'
  * to Tasks.
  *  - onTaskRemove (Callback): Required. Callback of the form (taskIndex) => { } which is passed on
  * to Tasks.
+ *  - onTaskUpdate (Callback): Required. Callback of the form (taskIndex, text) => { } which is passed on
+ * to Tasks.
  */
 class Section extends React.Component {
   handleChange = (event) => {
@@ -36,6 +38,7 @@ class Section extends React.Component {
         onTaskPromote={this.props.onTaskPromote}
         onTaskDemote={this.props.onTaskDemote}
         onTaskRemove={this.props.onTaskRemove}
+        onTaskUpdate={this.props.onTaskUpdate}
       />);
 
     return (

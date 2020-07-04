@@ -102,6 +102,15 @@ class Board extends React.Component {
     });
   }
 
+  onTaskUpdate = (sectionIndex, taskIndex, text) => {
+    const tasks = this.state.tasks.slice();
+    tasks[sectionIndex][taskIndex] = text;
+
+    this.setState({
+      tasks: tasks,
+    });
+  }
+
   // Callback used by Sections to update their taskInputs.
   updateTaskInput = (sectionIndex, value) => {
     const taskInput = this.state.taskInput.slice();
@@ -133,6 +142,7 @@ class Board extends React.Component {
           onTaskPromote={(taskIndex) => this.onTaskPromote(index, taskIndex)}
           onTaskDemote={(taskIndex) => this.onTaskDemote(index, taskIndex)}
           onTaskRemove={(taskIndex) => this.onTaskRemove(index, taskIndex)}
+          onTaskUpdate={(taskIndex, text) => this.onTaskUpdate(index, taskIndex, text)}
         />
       </div>);
 

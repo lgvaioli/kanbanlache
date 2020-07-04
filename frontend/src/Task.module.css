@@ -1,3 +1,7 @@
 .Task {
     background-color: cornflowerblue;
 }
+
+.Task textarea {
+    resize: none;
+}

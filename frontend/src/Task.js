@@ -21,6 +21,7 @@ class Task extends React.Component {
 
     this.state = {
       editMode: false,
+      text: this.props.text,
     };
   }
 
@@ -31,11 +32,18 @@ class Task extends React.Component {
   }
 
   onUpdate = () => {
-    alert('onUpdate: Implement me!');
+    if (this.state.text === '') {
+      return alert("Can't update task: Text is empty!");
+    }
+
+    this.props.onTaskUpdate(this.props.index, this.state.text);
+    this.toggleEditMode();
   }
 
-  onTextareaChange = () => {
-    alert('onTextareaChange: Implement me!');
+  onTextareaChange = (event) => {
+    this.setState({
+      text: event.target.value,
+    });
   }
 
   render() {
@@ -45,7 +53,8 @@ class Task extends React.Component {
           ?
             <div>
               <button onClick={this.toggleEditMode}>Cancel</button>
-              <textarea value={this.props.text} onChange={this.onTextareaChange} />
+              <button onClick={this.onUpdate}>Update</button>
+              <textarea onChange={this.onTextareaChange} defaultValue={this.props.text} />
             </div>
           :
             <div>
