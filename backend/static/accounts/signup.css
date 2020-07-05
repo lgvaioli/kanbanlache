@@ -1,24 +1,25 @@
 :root {
   --margin-default: 20px;
-}
-
+  }
+  
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
 }
-
+  
 body {
   background-color: palegoldenrod;
   text-align: center;
   font-family: 'Roboto', sans-serif;
   padding: 15px;
 }
-
-h1, h2, h3, input {
+  
+h1, h2, input {
   margin-bottom: var(--margin-default);
 }
 
-h3 {
-  margin-top: calc(var(--margin-default) * 2);
+/* Hack: Simplest way to hide the ugly "help text" from Django. */
+.helptext, ul {
+  display: none;
 }

@@ -1,15 +1,21 @@
 {% load static %}
-<head>
-  <title>Login</title>
-  <link rel="stylesheet" href="{% static "login.css" %}">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
-</head>
-<body>
-  <h1>Kanbanlache</h1>
-  <h2>Login</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-  </form>
-</body>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="{% static "login.css" %}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <h1>Kanbanlache</h1>
+    <!-- FIXME: Don't hardcode this route -->
+    <h3>Don't have an account? Create one <a href="/accounts/signup">here</a></h2>
+    <h2>Login</h2>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Login</button>
+    </form>
+  </body>
+</html>
