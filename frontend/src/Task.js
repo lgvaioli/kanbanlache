@@ -65,10 +65,10 @@ class Task extends React.Component {
                 && <button onClick={this.toggleEditMode}>Edit</button>}
               {this.props.removable
                 && <button onClick={() => this.props.onTaskRemove(this.props.index)}>Remove</button>}
-              {this.props.promotable &&
-                <button onClick={() => this.props.onTaskPromote(this.props.index)}>Promote</button>}
               {this.props.demotable &&
                 <button onClick={() => this.props.onTaskDemote(this.props.index)}>Demote</button>}
+              {this.props.promotable &&
+                <button onClick={() => this.props.onTaskPromote(this.props.index)}>Promote</button>}
               <h2>{this.props.text}</h2>
             </div>
           }

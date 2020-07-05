@@ -1,0 +1,15 @@
+{% load static %}
+<head>
+  <title>Login</title>
+  <link rel="stylesheet" href="{% static "login.css" %}">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+</head>
+<body>
+  <h1>Kanbanlache</h1>
+  <h2>Login</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Login</button>
+  </form>
+</body>
