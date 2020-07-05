@@ -32,12 +32,38 @@ import Task from './Task'
  *  - taskDemotable (Boolean): Optional. Indicates whether the Tasks in this section are demotable.
  */
 class Section extends React.Component {
-  handleChange = (event) => {
-    this.props.updateTaskInput(event.target.value);
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      // Controlled <input> for adding tasks
+      taskInput: '',
+    };
   }
 
-  render() {
-    const tasks = this.props.tasks.map((task, index) =>
+  onAddTaskButtonPressed = () => {
+    // Tasks can't be empty
+    if (this.state.taskInput === '') {
+      return alert("You can't add an empty task!");
+    }
+
+    // Update section model with a callback passed from above
+    this.props.addTask(this.state.taskInput);
+
+    // Reset task input
+    this.setState({
+      taskInput: '',
+    });
+  }
+
+  onTaskInputChange = (event) => {
+    this.setState({
+      taskInput: event.target.value,
+    });
+  }
+
+  buildTasksWidget(tasks) {
+    return tasks.map((task, index) =>
       <Task
         key={index}
         index={index}
@@ -51,15 +77,23 @@ class Section extends React.Component {
         promotable={this.props.taskPromotable}
         demotable={this.props.taskDemotable}
       />);
+  }
+
+  render() {
+    let tasksWidget = null;
+
+    if (this.props.tasks && this.props.tasks.length > 0) {
+      tasksWidget = this.buildTasksWidget(this.props.tasks);
+    }
 
     return (
       <div>
         <div className={styles.Section}>
           <h2>{this.props.name}</h2>
-          {tasks}
+          {tasksWidget}
         </div>
-        {this.props.hasTaskAdder && <input type='text' value={this.props.taskInput} onChange={this.handleChange}/>}
-        {this.props.hasTaskAdder && <button onClick={this.props.onAddTask}>Add task</button>}
+        {this.props.hasTaskAdder && <input type='text' value={this.state.taskInput} onChange={this.onTaskInputChange}/>}
+        {this.props.hasTaskAdder && <button onClick={this.onAddTaskButtonPressed}>Add task</button>}
       </div>
     );
   }
