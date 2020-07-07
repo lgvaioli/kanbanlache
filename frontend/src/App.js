@@ -4,37 +4,52 @@ import Board from './Board';
 import axios from 'axios';
 
 
+const APP_NAME = 'Kanbanlache';
 const BASE_URL = window.location.href;
-const LOGOUT_URL = `${BASE_URL}accounts/logout`;
-const LOGOUT_SUCCESS_REDIRECT_URL = BASE_URL;
-const BOARD_URL = `${BASE_URL}board/`;
 
+const AppUrls = {
+  LOGOUT: `${BASE_URL}accounts/logout`,
+  LOGOUT_SUCCESS_REDIRECT: BASE_URL,
+  BOARD: `${BASE_URL}board/`,
+};
+
+
+/**
+ * App component. Contains and manages a Board, including communication
+ * with the backend.
+ * 
+ * Props: This component has no props.
+ */
 class App extends React.Component {
+  /**
+   * Component constructor.
+   */
   constructor(props) {
     super(props);
 
     this.state = {
-      // Board name
       board: '',
-
-      /**
-       * Sections. An array of the form
-       * [
-       *  { name: 'first section', tasks: ['task 1', ..., 'last task'] },
-       *  ...
-       *  { name: 'last section', tasks: ['task 1', ..., 'last task'] }
-       * ]
-       */
       sections: [],
+    };
+
+    /**
+     * Interface this component offers to its children.
+     */
+    this.App = {
+      addTask: this.addTask,
+      onTaskPromote: this.onTaskPromote,
+      onTaskDemote: this.onTaskDemote,
+      onTaskRemove: this.onTaskRemove,
+      onTaskUpdate: this.onTaskUpdate,
     };
   }
 
   /**
-   * Logout button callback. Redirects to the login page.
+   * Logouts user and redirects him to the login page.
    */
   onLogout = () => {
     axios
-      .get(LOGOUT_URL)
+      .get(AppUrls.LOGOUT)
       .then(() => {
         /**
          * I know this is a hack, but look, the alternative is overriding django's auth default
@@ -46,7 +61,7 @@ class App extends React.Component {
          * and backend/backend/settings.py read the LOGOUT_REDIRECT_URL variable from some common
          * config file.
          */
-        window.location.replace(LOGOUT_SUCCESS_REDIRECT_URL);
+        window.location.replace(AppUrls.LOGOUT_SUCCESS_REDIRECT);
       })
       .catch((err) => {
         alert(`Error while logging out: ${err.message}`);
@@ -172,15 +187,24 @@ class App extends React.Component {
    */
   componentDidMount() {
     axios
-      .get(BOARD_URL)
+      .get(AppUrls.BOARD)
       .then((res) => {
         /**
-         * res.data =
-         *  {
-         *    'boardName': 'Awesome Board Name',
-         *    'sectionNames': ['TODO', 'DOING', 'DONE'],
-         *    'taskTexts': [ ['TODO', 'program stuff'], ['DOING', 'testing stuff'] ]
-         *  }
+         * res.data layout:
+         * {
+         *    board: 'Board name',
+         *    sections: [
+         *      {
+         *        name: 'First section',
+         *        tasks: ['first task', ..., 'last task']
+         *      },
+         *      ...
+         *      {
+         *        name: 'Last section',
+         *        tasks: ['first task', ..., 'last task']
+         *      }
+         *    ]
+         * }
          */
         this.setState({
           board: res.data.board,
@@ -192,19 +216,18 @@ class App extends React.Component {
       });
   }
 
+  /**
+   * Renders component.
+   */
   render() {
     return (
       <div className={styles.App}>
         <button onClick={this.onLogout}>Logout</button>
-        <h1>Kanbanlache</h1>
+        <h1>{APP_NAME}</h1>
         <Board
+          App={this.App}
           name={this.state.board}
           sections={this.state.sections}
-          addTask={this.addTask}
-          onTaskPromote={this.onTaskPromote}
-          onTaskDemote={this.onTaskDemote}
-          onTaskRemove={this.onTaskRemove}
-          onTaskUpdate={this.onTaskUpdate}
         />
       </div>
     );

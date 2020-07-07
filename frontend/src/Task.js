@@ -4,21 +4,18 @@ import styles from './Task.module.css'
 /**
  * Task component. Implements the front-end of Tasks.
  * 
- * props:
- *  - text (String): Required. A string which describes this task.
- *  - index (Integer): Required. The index of the Task in the containing section.
- *  - onTaskPromote (Callback): Required. Callback of the form (taskIndex) => { } which is
- * called when the "Promote" button is clicked.
- *  - onTaskDemote (Callback): Required. Callback of the form (taskIndex) => { } which is
- * called when the "Demote" button is clicked.
- *  - onTaskRemove (Callback): Required. Callback of the form (taskIndex) => { } which is
- * called when the "Remove" button is clicked.
- *  - editable (Boolean): Optional. Indicates whether the task is editable or not. Defaults to false.
- *  - removable (Boolean): Optional. Indicates whether the task is removable or not. Defaults to true.
- *  - promotable (Boolean): Optional. Indicates whether the task is promotable or not. Defaults to true.
- *  - demotable (Boolean): Optional. Indicates whether the task is demotable or not. Defaults to true.
+ * Required props:
+ *  - Section (Object): The interface of the section to which this task belongs.
+ *  - text (String): A string which describes this task.
+ * 
+ * Optional props:
+ *  - config (Object): An object with the optional configuration of this task. See
+ *  Task.defaultProps (in this file) to know the valid config options.
  */
 class Task extends React.Component {
+  /**
+   * Component constructor.
+   */
   constructor(props) {
     super(props);
 
@@ -28,27 +25,39 @@ class Task extends React.Component {
     };
   }
 
+  /**
+   * Toggles task edit mode on/off.
+   */
   toggleEditMode = () => {
     this.setState({
       editMode: !this.state.editMode,
     });
   }
 
+  /**
+   * Updates task text.
+   */
   onUpdate = () => {
     if (this.state.text === '') {
       return alert("Can't update task: Text is empty!");
     }
 
-    this.props.onTaskUpdate(this.props.index, this.state.text);
+    this.props.Section.onTaskUpdate(this.state.text);
     this.toggleEditMode();
   }
 
+  /**
+   * Updates task state from textarea.
+   */
   onTextareaChange = (event) => {
     this.setState({
       text: event.target.value,
     });
   }
 
+  /**
+   * Renders component.
+   */
   render() {
     return (
       <div className={styles.Task}>
@@ -61,14 +70,14 @@ class Task extends React.Component {
             </div>
           :
             <div>
-              {this.props.editable
+              {this.props.config.editable
                 && <button onClick={this.toggleEditMode}>Edit</button>}
-              {this.props.removable
-                && <button onClick={() => this.props.onTaskRemove(this.props.index)}>Remove</button>}
-              {this.props.demotable &&
-                <button onClick={() => this.props.onTaskDemote(this.props.index)}>Demote</button>}
-              {this.props.promotable &&
-                <button onClick={() => this.props.onTaskPromote(this.props.index)}>Promote</button>}
+              {this.props.config.removable
+                && <button onClick={() => this.props.Section.onTaskRemove()}>Remove</button>}
+              {this.props.config.demotable &&
+                <button onClick={() => this.props.Section.onTaskDemote()}>Demote</button>}
+              {this.props.config.promotable &&
+                <button onClick={() => this.props.Section.onTaskPromote()}>Promote</button>}
               <h2>{this.props.text}</h2>
             </div>
           }
@@ -77,11 +86,16 @@ class Task extends React.Component {
   }
 }
 
+/**
+ * Default props of this component.
+ */
 Task.defaultProps = {
-  editable: false,
-  removable: true,
-  promotable: true,
-  demotable: true,
+  config: {
+    editable: false,
+    removable: true,
+    promotable: true,
+    demotable: true,
+  },
 };
 
 export default Task;
