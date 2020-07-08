@@ -10,6 +10,18 @@
             "name": "Debug React",
             "url": "http://localhost:3000",
             "webRoot": "${workspaceRoot}/frontend/src"
+        },
+        {
+            "name": "Debug Django",
+            "type": "python",
+            "request": "launch",
+            "stopOnEntry": false,
+            "program": "${workspaceRoot}/backend/manage.py",
+            "args": [
+                "runserver",
+                "--no-color",
+                "--noreload" // live-reloading doesn't work with debugging
+            ]
         }
     ]
 }

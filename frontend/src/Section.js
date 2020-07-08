@@ -19,7 +19,7 @@ export const SectionPosition = {
  * 
  * Required props:
  *  - Board (Object): The interface of the board to which this section belongs.
- *  - name (String): The name to display on top of this section.
+ *  - model (Object): An object { id, name } representing the model of this Section.
  *  - tasks (Array of Strings): The tasks this section contains.
  * 
  * Optional props:
@@ -94,8 +94,8 @@ export class Section extends React.Component {
       return (
         <Task
           Section={Section}
-          key={index}
-          text={task}
+          key={task.id}
+          model={task}
           config={taskConfig}
         />
       );
@@ -116,7 +116,7 @@ export class Section extends React.Component {
     return (
       <div>
         <div className={styles.Section}>
-          <h2>{this.props.name}</h2>
+          <h2>{this.props.model.name}</h2>
           {tasksWidget}
         </div>
         {this.props.config.hasTaskAdder &&

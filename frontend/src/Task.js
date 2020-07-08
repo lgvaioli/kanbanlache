@@ -6,7 +6,8 @@ import styles from './Task.module.css'
  * 
  * Required props:
  *  - Section (Object): The interface of the section to which this task belongs.
- *  - text (String): A string which describes this task.
+ *  - model (Object): An object { id: Integer, text: String } representing the Task
+ * database model.
  * 
  * Optional props:
  *  - config (Object): An object with the optional configuration of this task. See
@@ -21,7 +22,7 @@ class Task extends React.Component {
 
     this.state = {
       editMode: false,
-      text: this.props.text,
+      textareaValue: this.props.model.text,
     };
   }
 
@@ -38,11 +39,11 @@ class Task extends React.Component {
    * Updates task text.
    */
   onUpdate = () => {
-    if (this.state.text === '') {
+    if (this.state.textareaValue === '') {
       return alert("Can't update task: Text is empty!");
     }
 
-    this.props.Section.onTaskUpdate(this.state.text);
+    this.props.Section.onTaskUpdate(this.state.textareaValue);
     this.toggleEditMode();
   }
 
@@ -51,7 +52,7 @@ class Task extends React.Component {
    */
   onTextareaChange = (event) => {
     this.setState({
-      text: event.target.value,
+      textareaValue: event.target.value,
     });
   }
 
@@ -66,7 +67,7 @@ class Task extends React.Component {
             <div>
               <button onClick={this.toggleEditMode}>Cancel</button>
               <button onClick={this.onUpdate}>Update</button>
-              <textarea onChange={this.onTextareaChange} defaultValue={this.props.text} />
+              <textarea onChange={this.onTextareaChange} defaultValue={this.props.model.text} />
             </div>
           :
             <div>
@@ -78,7 +79,7 @@ class Task extends React.Component {
                 <button onClick={() => this.props.Section.onTaskDemote()}>Demote</button>}
               {this.props.config.promotable &&
                 <button onClick={() => this.props.Section.onTaskPromote()}>Promote</button>}
-              <h2>{this.props.text}</h2>
+              <h2>{this.props.model.text}</h2>
             </div>
           }
       </div>

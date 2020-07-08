@@ -15,7 +15,7 @@ const SECTIONS_GAP = 4;
  * 
  * Required props:
  * - App (Object): The interface of the app to which this section belongs.
- * - name (String): The name to display on top of this board.
+ * - model (Object): An object { id, name } representing the model of this Board.
  * - sections (Array): An array of sections [{ name: 'first section', tasks: ['first task', ...] }, ...].
  */
 class Board extends React.Component {
@@ -69,7 +69,7 @@ class Board extends React.Component {
         <div key={currSection.name} style={{ width: `${sectionWidth.toString()}%`, }}>
           <Section
             Board={Board}
-            name={currSection.name}
+            model={currSection}
             tasks={currSection.tasks}
             config={sectionConfig}
           />
@@ -87,8 +87,8 @@ class Board extends React.Component {
     let sectionsWidget = null;
 
     // An empty board is valid, so we gotta check this.
-    if (this.props.sections && this.props.sections.length > 0) {
-      sectionsWidget = this.buildSectionsWidget(this.props.sections);
+    if (this.props.sectionModels && this.props.sectionModels.length > 0) {
+      sectionsWidget = this.buildSectionsWidget(this.props.sectionModels);
     }
 
     const sectionsContainerLayout = {
@@ -100,7 +100,7 @@ class Board extends React.Component {
 
     return (
       <div className={styles.Board}>
-        <h2>{this.props.name}</h2>
+        <h2>{this.props.model.name}</h2>
         {sectionsContainer}
       </div>
     );
