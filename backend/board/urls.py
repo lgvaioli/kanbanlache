@@ -9,4 +9,6 @@ urlpatterns = [
     # of s*** that doesn't take into account the HTTP method, and I hate having to hack around with
     # helper "router" functions like this.
     path('section/<int:section_id>/task/<int:task_id>', views.task_action_router, name='task_action_router'),
+    path('section/<int:section_id>/task/<int:task_id>/promote', views.promote_task, name='promote_task'),
+    path('section/<int:section_id>/task/<int:task_id>/demote', views.demote_task, name='demote_task'),
 ]

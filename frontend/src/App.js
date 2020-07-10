@@ -1,20 +1,11 @@
 import React from 'react';
 import styles from './App.module.css';
 import Board from './Board';
-import axios from 'axios';
+import Backend from './Backend';
+import { URLS } from './Backend';
 
 
 const APP_NAME = 'Kanbanlache';
-const BASE_URL = window.location.href;
-
-const AppUrls = {
-  LOGOUT: `${BASE_URL}accounts/logout`,
-  LOGOUT_SUCCESS_REDIRECT: BASE_URL,
-  BOARD: `${BASE_URL}board/`,
-};
-
-axios.defaults.xsrfCookieName = 'csrftoken';
-axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN';
 
 
 /**
@@ -38,6 +29,8 @@ class App extends React.Component {
       sectionModels: [],
     };
 
+    this.backend = new Backend();
+
     /**
      * Interface this component offers to its children.
      */
@@ -54,24 +47,26 @@ class App extends React.Component {
    * Logouts user and redirects him to the login page.
    */
   onLogout = () => {
-    axios
-      .get(AppUrls.LOGOUT)
-      .then(() => {
-        /**
-         * I know this is a hack, but look, the alternative is overriding django's auth default
-         * behavior, basically copy-and-pasting it but slightly modifying it so instead of returning
-         * a stupid 200 (OK) with data, it returns a 301 (redirect) with data pointing to the right
-         * URL as configured in backend/backend/settings.py. I think that's FAR worse than just
-         * manually "redirecting" here by changing the window location. This URL doesn't even need
-         * to be hardcoded: The program can be eventually refactored so that both this file (App.js)
-         * and backend/backend/settings.py read the LOGOUT_REDIRECT_URL variable from some common
-         * config file.
-         */
-        window.location.replace(AppUrls.LOGOUT_SUCCESS_REDIRECT);
-      })
-      .catch((err) => {
-        alert(`Error while logging out: ${err.message}`);
-      });
+    this.backend.logout(
+      () => {
+      // Succesfully logged out, redirect
+
+      /**
+       * I know this is a hack, but look, the alternative is overriding django's auth default
+       * behavior, basically copy-and-pasting it but slightly modifying it so instead of returning
+       * a stupid 200 (OK) with data, it returns a 301 (redirect) with data pointing to the right
+       * URL as configured in backend/backend/settings.py. I think that's FAR worse than just
+       * manually "redirecting" here by changing the window location. This URL doesn't even need
+       * to be hardcoded: The program can be eventually refactored so that both this file (App.js)
+       * and backend/backend/settings.py read the LOGOUT_REDIRECT_URL variable from some common
+       * config file.
+       */
+      window.location.replace(URLS.LOGOUT_SUCCESS_REDIRECT);
+    },
+    (errorMessage) => {
+      // Could not log out, show error message
+      alert(`Could not log out: ${errorMessage}`);
+    });
   }
 
   /**
@@ -85,22 +80,37 @@ class App extends React.Component {
       return;
     }
 
-    // Get copy of sections to enforce data immutability
-    const sectionModelsNew = this.state.sectionModels.slice();
+    /**
+     * First, try to promote task in the backend. If that succeeds, update
+     * the frontend, otherwise show an error message.
+     */
+    this.backend.promoteTask(
+      this.state.sectionModels[sectionIndex].id,
+      this.state.sectionModels[sectionIndex].tasks[taskIndex].id,
+      () => {
+        // Task was successfully promoted in the backend, update frontend
 
-    // Get task which will be promoted
-    const promotedTask = sectionModelsNew[sectionIndex].tasks[taskIndex];
+        // Get copy of sections to enforce data immutability
+        const sectionModelsNew = this.state.sectionModels.slice();
 
-    // Remove promoted task from its previous section
-    sectionModelsNew[sectionIndex].tasks.splice(taskIndex, 1);
+        // Get task which will be promoted
+        const promotedTask = sectionModelsNew[sectionIndex].tasks[taskIndex];
 
-    // Add promoted task to its new section
-    sectionModelsNew[sectionIndex + 1].tasks.push(promotedTask);
+        // Remove promoted task from its previous section
+        sectionModelsNew[sectionIndex].tasks.splice(taskIndex, 1);
 
-    // Update state
-    this.setState({
-      sectionModels: sectionModelsNew,
-    });
+        // Add promoted task to its new section
+        sectionModelsNew[sectionIndex + 1].tasks.push(promotedTask);
+
+        // Update state
+        this.setState({
+          sectionModels: sectionModelsNew,
+        });
+      },
+      (errorMessage) => {
+        // Task could not be promoted in the backend, show error message
+        alert(`Could not promote task: ${errorMessage}`);
+      });
   }
 
   /**
@@ -114,22 +124,37 @@ class App extends React.Component {
       return;
     }
 
-    // Get copy of sections to enforce data immutability
-    const sectionModelsNew = this.state.sectionModels.slice();
+    /**
+     * First, try to demote task in the backend. If that succeeds, update
+     * the frontend, otherwise show an error message.
+     */
+    this.backend.demoteTask(
+      this.state.sectionModels[sectionIndex].id,
+      this.state.sectionModels[sectionIndex].tasks[taskIndex].id,
+      () => {
+        // Task was successfully demoted in the backend, update frontend
 
-    // Get task which will be demoted
-    const demotedTask = sectionModelsNew[sectionIndex].tasks[taskIndex];
+        // Get copy of sections to enforce data immutability
+        const sectionModelsNew = this.state.sectionModels.slice();
 
-    // Remove demoted task from its previous section
-    sectionModelsNew[sectionIndex].tasks.splice(taskIndex, 1);
+        // Get task which will be demoted
+        const demotedTask = sectionModelsNew[sectionIndex].tasks[taskIndex];
 
-    // Add demoted task to its new section
-    sectionModelsNew[sectionIndex - 1].tasks.push(demotedTask);
+        // Remove demoted task from its previous section
+        sectionModelsNew[sectionIndex].tasks.splice(taskIndex, 1);
 
-    // Update state
-    this.setState({
-      sectionModels: sectionModelsNew,
-    });
+        // Add demoted task to its new section
+        sectionModelsNew[sectionIndex - 1].tasks.push(demotedTask);
+
+        // Update state
+        this.setState({
+          sectionModels: sectionModelsNew,
+        });
+      },
+      (errorMessage) => {
+        // Task could not be demoted in the backend, show error message
+        alert(`Could not demote task: ${errorMessage}`);
+      });
   }
 
   /**
@@ -143,16 +168,36 @@ class App extends React.Component {
       return;
     }
 
-    // Get copy of sections to enforce data immutability
-    const sectionModelsNew = this.state.sectionModels.slice();
+    /**
+     * Try to remove task from backend. If successful, remove it also from
+     * frontend, otherwise show an error message.
+     */
+    this.backend.deleteTask(
+      this.state.sectionModels[sectionIndex].id,
+      this.state.sectionModels[sectionIndex].tasks[taskIndex].id,
+      () => {
+        /**
+         * Task was successfully deleted from backend; update frontend.
+         */
 
-    // Remove task
-    sectionModelsNew[sectionIndex].tasks.splice(taskIndex, 1);
+        // Get copy of sections to enforce data immutability
+        const sectionModelsNew = this.state.sectionModels.slice();
 
-    // Update state
-    this.setState({
-      sectionModels: sectionModelsNew,
-    });
+        // Remove task
+        sectionModelsNew[sectionIndex].tasks.splice(taskIndex, 1);
+
+        // Update state
+        this.setState({
+          sectionModels: sectionModelsNew,
+        });
+
+      },
+      (errorMessage) => {
+        /**
+         * Task could not be removed from backend; show error message.
+         */
+        alert(`Could not remove task: ${errorMessage}`);
+      });    
   }
 
   /**
@@ -162,23 +207,43 @@ class App extends React.Component {
    * @param {String} text New text.
    */
   onTaskUpdate = (sectionIndex, taskIndex, text) => {
-    // Get copy of sections to enforce data immutability
-    const sectionModelsNew = this.state.sectionModels.slice();
-
-    // Update task.
     /**
-     * FIXME: I don't like how I gotta know the details of Section/Task models
-     * to do this stuff here. I mean, App shouldn't in principle be concerned about
-     * those kind of details. I think I'm conflating the models/views and should
-     * probably separate them in a cleaner way, but for now this comment will
-     * have to be enough.
+     * Try to update task in backend; if successful, update frontend, otherwise
+     * show an error message.
      */
-    sectionModelsNew[sectionIndex].tasks[taskIndex].text = text;
+    this.backend.updateTask(
+      this.state.sectionModels[sectionIndex].id,
+      this.state.sectionModels[sectionIndex].tasks[taskIndex].id,
+      text,
+      (taskModel) => {
+        /**
+         * Task was succesfully updated in backend; update frontend.
+         */
 
-    // Update state
-    this.setState({
-      sectionModels: sectionModelsNew,
-    });
+        // Get copy of sections to enforce data immutability
+        const sectionModelsNew = this.state.sectionModels.slice();
+
+        // Update task.
+        /**
+         * FIXME: I don't like how I gotta know the details of Section/Task models
+         * to do this stuff here. I mean, App shouldn't in principle be concerned about
+         * those kind of details. I think I'm conflating the models/views and should
+         * probably separate them in a cleaner way, but for now this comment will
+         * have to be enough.
+         */
+        sectionModelsNew[sectionIndex].tasks[taskIndex].text = taskModel.text;
+
+        // Update state
+        this.setState({
+          sectionModels: sectionModelsNew,
+        });
+      },
+      (errorMessage) => {
+        /**
+         * Could not update task in backend; show error message.
+         */
+        alert(`Could not update task: ${errorMessage}`);
+      });
   }
 
   /**
@@ -187,21 +252,52 @@ class App extends React.Component {
    * @param {String} taskText Text of the task to be added.
    */
   addTask = (sectionIndex, taskText) => {
-    const sectionModelsNew = this.state.sectionModels.slice();
-    sectionModelsNew[sectionIndex].tasks.push(taskText);
+    /**
+     * Basic flow: First we try to add the task to backend. We only add the
+     * task to the frontend if the backend operation was succesful.
+     */
+    
+    // Make backend request
+    this.backend.addTask(
+      this.state.sectionModels[sectionIndex].id,
+      taskText,
+      (taskModel) => {
+        /**
+         * Task was added successfully to backend; update frontend.
+         */
 
-    this.setState({
-      sectionModels: sectionModelsNew,
-    });
+        // Get copy of sections to enforce data immutability
+        const sectionModelsNew = this.state.sectionModels.slice();
+
+        // Push new task into tasks array (BTW, we should probably abstract these operations
+        // into a separate TaskModel class or whatever)
+        sectionModelsNew[sectionIndex].tasks.push({
+          id: taskModel.id,
+          text: taskModel.text,
+        });
+
+        // Update state
+        this.setState({
+          sectionModels: sectionModelsNew,
+        });
+      },
+      (errorMessage) => {
+        /**
+         * Task could not be added to backend; show error message.
+         */
+
+        alert(`Could not add task: ${errorMessage}`);
+      });
   }
 
   /**
    * Initializes Board with AJAX data.
    */
   componentDidMount() {
-    axios
-      .get(AppUrls.BOARD)
-      .then((res) => {
+    this.backend.getBoardData(
+      (boardData) => {
+        // Got data successfully; update frontend with it
+
         /**
          * Take a look at backend/backend/views.py to see res.data's layout.
          * I *could* describe it here, but then I would have to maintain this comment and
@@ -209,52 +305,15 @@ class App extends React.Component {
          */
         this.setState({
           boardModel: {
-            id: res.data.id,
-            name: res.data.name,
+            id: boardData.id,
+            name: boardData.name,
           },
-          sectionModels: res.data.sections,
+          sectionModels: boardData.sections,
         });
-      })
-      .catch((err) => {
-        alert(`Error while getting board data: ${err.message}`);
-      });
-  }
-
-  // FIXME: Delete these *_task functions after debugging.
-  add_task_to_section = () => {
-    axios
-      .post(`${AppUrls.BOARD}section/11/task`, {
-        text: 'test text',
-      })
-      .then((res) => {
-        alert(`${res.data}`);
-      })
-      .catch((err) => {
-        alert(`err: ${JSON.stringify(err)}`);
-      });
-  }
-
-  update_task = () => {
-    axios
-      .put(`${AppUrls.BOARD}section/11/task/8`, {
-        text: 'test text [updated]',
-      })
-      .then((res) => {
-        alert(`${res.data}`);
-      })
-      .catch((err) => {
-        alert(`err: ${JSON.stringify(err)}`);
-      });
-  }
-
-  delete_task = () => {
-    axios
-      .delete(`${AppUrls.BOARD}section/11/task/9`)
-      .then((res) => {
-        alert(`${res.data}`);
-      })
-      .catch((err) => {
-        alert(`Error while getting board data: ${err.message}`);
+      },
+      (errorMessage) => {
+        // Could not get data; show an error message
+        alert(`Could not get board data: ${errorMessage}`);
       });
   }
 
@@ -265,9 +324,6 @@ class App extends React.Component {
     return (
       <div className={styles.App}>
         <button onClick={this.onLogout}>Logout</button>
-        <button onClick={this.add_task_to_section}>add_task_to_section</button>
-        <button onClick={this.update_task}>update_task</button>
-        <button onClick={this.delete_task}>delete_task</button>
         <h1>{APP_NAME}</h1>
         <Board
           App={this.App}
