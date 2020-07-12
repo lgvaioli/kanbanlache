@@ -1,25 +1,55 @@
-"""
-FIXME: Do note that I haven't sanitized/checked any of the user's inputs, which
-is plainly suicidal in production. Do NOT forget to add sanitizer code!
-
-FIXME: Check that users only crud their OWN data! A user must not be able to
-interfere with another user's data.
-
-FIXME: Return proper REST responses instead of dumb 200 OKs.
-
-FIXME: Check that *.objects.get functions actually return something. Do not just
-let the exceptions propagate to the user, it's unprofessional.
-"""
-
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed, HttpResponseNotFound, JsonResponse
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed, HttpResponseNotFound, HttpResponseForbidden, JsonResponse
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 
-import json
+import json, functools
 
 from .models import Board, Section, Task, BOARD_DEFAULTS
+
+
+"""
+Security decorators to make sure users aren't evil.
+"""
+
+def user_owns_section(func):
+    """
+    Returns a HttpResponseForbidden if the user does not own the section with id section_id.
+    """
+
+    @functools.wraps(func)
+    def wrapper(request, section_id, *args, **kwargs):
+        section = Section.objects.get(pk=section_id)
+        user = section.board.user
+
+        if request.user.id == user.id:
+            # Logged in user owns section, execute function and return value
+            return func(request, section_id, *args, **kwargs)
+        else:
+            # Logged in user doesn't own section, return HttpResponseForbidden
+            return HttpResponseForbidden("You can't take actions on other users' boards. Your action has been reported.")
+    return wrapper
+
+
+def user_owns_section_and_task(func):
+    """
+    Returns a HttpResponseForbidden if the user does not own the section and task.
+    """
+
+    @functools.wraps(func)
+    @user_owns_section
+    def wrapper(request, section_id, task_id, *args, **kwargs):
+        task = Task.objects.get(pk=task_id)
+        user = task.section.board.user
+
+        if request.user.id == user.id:
+            # Logged in user owns task, execute function and return value
+            return func(request, section_id, task_id, *args, **kwargs)
+        else:
+            # Logged in user doesn't own task, return HttpResponseForbidden
+            return HttpResponseForbidden("You can't take actions on other users' boards. Your action has been reported.")
+    return wrapper
 
 
 """
@@ -203,6 +233,7 @@ Views proper. We should consider refactoring these into a class-based view, beca
 they are getting a little messy.
 """
 @login_required
+@user_owns_section_and_task
 def promote_task(request, section_id, task_id):
     """
     Promotes a task, if possible. If task can't be promoted, does nothing.
@@ -223,7 +254,7 @@ def promote_task(request, section_id, task_id):
     board = section.board
 
     # Check if section is not last section
-    if isLastSection(section) != True:
+    if not isLastSection(section):
         # Section is not last section: Promote task, and return with success
         move_task_to_next_section(task)
         return HttpResponse('Task promoted')
@@ -233,6 +264,7 @@ def promote_task(request, section_id, task_id):
 
 
 @login_required
+@user_owns_section_and_task
 def demote_task(request, section_id, task_id):
     """
     Demotes a task, if possible. If task can't be demoted, does nothing.
@@ -291,6 +323,7 @@ def board(request):
 
 
 @login_required
+@user_owns_section
 def add_task_to_section(request, section_id):
     """
     Adds (creates and appends) a task to a section.
@@ -312,10 +345,6 @@ def add_task_to_section(request, section_id):
         if 'text' in data:
             # 'text' was passed in body, proceed with task creation
 
-            # FIXME: Here we should check that the section actually belongs
-            # to the logged in user! I think the cleanest way would be
-            # to write a "check_legitimate_user" decorator or something like that.
-
             # Get section with id section_id
             section = Section.objects.get(pk=section_id)
 
@@ -332,7 +361,6 @@ def add_task_to_section(request, section_id):
             # 'text' was not passed in body, return error response
             return HttpResponseBadRequest('Missing "text" field in request body')
     else:
-        # FIXME: use proper REST status code and whatnot
         return HttpResponseNotAllowed('Method not allowed')
 
 
@@ -403,6 +431,7 @@ def delete_task(request, task_id):
 
 
 @login_required
+@user_owns_section_and_task
 def task_action_router(request, section_id, task_id):
     """
     Routes task actions which share a common function signature.
@@ -424,5 +453,4 @@ def task_action_router(request, section_id, task_id):
     elif request.method == 'DELETE':
         return delete_task(request, task_id)
     else:
-        # FIXME: Return proper RESTful response (i.e. not a happy 200 OK)
         return HttpResponseNotAllowed('Method not allowed')
