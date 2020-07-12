@@ -35,7 +35,7 @@ export class Section extends React.Component {
 
     this.state = {
       // Controlled <input> for adding tasks
-      taskInput: '',
+      textareaValue: '',
     };
   }
 
@@ -45,16 +45,16 @@ export class Section extends React.Component {
    */
   onAddTaskButtonPressed = () => {
     // Tasks can't be empty
-    if (this.state.taskInput === '') {
+    if (this.state.textareaValue === '') {
       return alert("You can't add an empty task!");
     }
 
     // Update section model with a callback passed from above
-    this.props.Board.addTask(this.state.taskInput);
+    this.props.Board.addTask(this.state.textareaValue);
 
     // Reset task input
     this.setState({
-      taskInput: '',
+      textareaValue: '',
     });
   }
 
@@ -62,9 +62,9 @@ export class Section extends React.Component {
    * Callback called when the "Add task" input changes.
    * Updates the section's state.
    */
-  onTaskInputChange = (event) => {
+  ontextareaValueChange = (event) => {
     this.setState({
-      taskInput: event.target.value,
+      textareaValue: event.target.value,
     });
   }
 
@@ -119,10 +119,12 @@ export class Section extends React.Component {
           <h2>{this.props.model.name}</h2>
           {tasksWidget}
         </div>
-        {this.props.config.hasTaskAdder &&
-          <input type='text' value={this.state.taskInput} onChange={this.onTaskInputChange}/>}
-        {this.props.config.hasTaskAdder &&
-          <button onClick={this.onAddTaskButtonPressed}>Add task</button>}
+        <div className={styles.TaskAdder}>
+          {this.props.config.hasTaskAdder &&
+            <textarea onChange={this.ontextareaValueChange} value={this.state.textareaValue}/>}
+          {this.props.config.hasTaskAdder &&
+            <button id='addTaskBtn' onClick={this.onAddTaskButtonPressed}>Add task</button>}
+        </div>
       </div>
     );
   }

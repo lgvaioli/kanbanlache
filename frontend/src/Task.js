@@ -79,7 +79,7 @@ class Task extends React.Component {
                 <button onClick={() => this.props.Section.onTaskDemote()}>Demote</button>}
               {this.props.config.promotable &&
                 <button onClick={() => this.props.Section.onTaskPromote()}>Promote</button>}
-              <h2>{this.props.model.text}</h2>
+              <p>{this.props.model.text}</p>
             </div>
           }
       </div>

@@ -1,7 +1,44 @@
+/*
+FIXME: Colors must be coordinated at the application level. It's pretty
+obvious that the approach of setting colors manually in each CSS module file
+won't fly in production, because if you wanna change the color scheme you
+have to modify 4 different files, which is kind of a maintenance problem.
+*/
+
 .Task {
-    background-color: cornflowerblue;
+    background-color: #FFBD65;
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 15px;
 }
 
 .Task textarea {
     resize: none;
+}
+
+.Task p {
+    /* font-weight: bold; */
+    text-align: center;
+    font-size: 1.3em;
+    color: black;
+    margin-top: 15px;
+}
+
+.Task button {
+    background-color: hsl(33, 100%, 50%);
+    color: black;
+    border: none;
+    border-radius: 5px;
+    padding: 7px;
+    margin-right: 5px;
+    transition: background-color 0.5s;
+}
+
+.Task button:hover {
+    background-color: hsl(33, 100%, 40%);
+    cursor: pointer;
+}
+
+.Task button:focus {
+    outline: 1px dashed black;
 }

@@ -5,9 +5,11 @@
 }
 
 .Board {
-    background-color: mediumslateblue;
+    background-color: #333234;
+    color: whitesmoke;
     padding: 20px;
     min-height: 80vh;
+    border-radius: 15px;
 }
 
 h2 {

@@ -9,7 +9,7 @@
 }
 
 body {
-  background-color: palegoldenrod;
+  background-color: #B2AEAA;
   text-align: center;
   font-family: 'Roboto', sans-serif;
   padding: 15px;
@@ -21,4 +21,41 @@ h1, h2, h3, input {
 
 h3 {
   margin-top: calc(var(--margin-default) * 2);
+}
+
+/* FIXME: duplicated code. See frontend/src/App.module.css */
+button {
+  background-color: hsl(270, 2%, 40%);
+  color: whitesmoke;
+  border: none;
+  border-radius: 5px;
+  padding: 7px;
+  margin-right: 5px;
+  transition: background-color 0.5s;
+}
+
+button:hover {
+  background-color: hsl(270, 2%, 30%);
+  cursor: pointer;
+}
+
+button:focus {
+  outline: 1px dashed black;
+}
+
+li {
+  list-style-type: none;
+  margin-bottom: 20px;
+}
+
+input {
+  padding: 5px;
+  border: 2px solid hsl(270, 2%, 40%);
+  border-radius: 10px;
+  transition: border 0.5s;
+}
+
+input:focus {
+  border: 2px solid black;
+  outline: none;
 }

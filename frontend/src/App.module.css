@@ -5,12 +5,27 @@
 }
 
 .App {
-    background-color: rgb(235, 100, 100);
+    background-color: #B2AEAA;
     padding: 20px;
     min-height: 100vh;
 }
 
-h1 {
+.App h1 {
     margin-bottom: 20px;
     text-align: center;
+}
+
+.App button {
+    background-color: hsl(270, 2%, 40%);
+    color: whitesmoke;
+    border: none;
+    border-radius: 5px;
+    padding: 7px;
+    margin-right: 5px;
+    transition: background-color 0.5s;
+}
+
+.App button:hover {
+    background-color: hsl(270, 2%, 30%);
+    cursor: pointer;
 }

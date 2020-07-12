@@ -7,19 +7,64 @@
   margin: 0;
   box-sizing: border-box;
 }
-  
+
 body {
-  background-color: palegoldenrod;
+  background-color: #B2AEAA;
   text-align: center;
   font-family: 'Roboto', sans-serif;
   padding: 15px;
 }
-  
-h1, h2, input {
+
+h2 {
   margin-bottom: var(--margin-default);
 }
 
-/* Hack: Simplest way to hide the ugly "help text" from Django. */
-.helptext, ul {
-  display: none;
+li {
+  list-style-type: none;
+}
+
+.helptext {
+  display: block;
+  margin-bottom: var(--margin-default);
+}
+
+/* FIXME: duplicated code. See frontend/src/App.module.css */
+button {
+  background-color: hsl(270, 2%, 40%);
+  color: whitesmoke;
+  border: none;
+  border-radius: 5px;
+  padding: 7px;
+  margin-right: 5px;
+  transition: background-color 0.5s;
+}
+
+button:hover {
+  background-color: hsl(270, 2%, 30%);
+  cursor: pointer;
+}
+
+button:focus {
+  outline: 1px dashed black;
+}
+
+input {
+  padding: 5px;
+  border: 2px solid hsl(270, 2%, 40%);
+  border-radius: 10px;
+  transition: border 0.5s;
+}
+
+input:focus {
+  border: 2px solid black;
+  outline: none;
+}
+
+#id_username {
+  margin-bottom: var(--margin-default);
+}
+
+#id_password2 {
+  margin-top: var(--margin-default);
+  margin-bottom: var(--margin-default);
 }

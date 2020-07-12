@@ -36,6 +36,40 @@ class Backend {
   }
 
   /**
+   * Mock getBoardData to quickly test the frontend without the backend.
+   * The jarring mock_* naming convention is intentionally annoying, as you
+   * most certainly don't want to include this code in production by accident.
+   */
+  mock_getBoardData(successCallback, failureCallback) {
+    const mockBoard = {
+      id: 1,
+      name: 'Default board',
+      sections: [
+        { id: 1, name: 'TODO',
+          tasks: [
+            { id: 1, text: 'something to do #1', },
+            { id: 2, text: 'something to do #2', },
+            { id: 3, text: 'something to do #3', },
+          ] },
+        { id: 2, name: 'DOING',
+          tasks: [
+            { id: 4, text: 'something in progress #1', },
+            { id: 5, text: 'something in progress #2', },
+            { id: 6, text: 'something in progress #3', },
+          ] },
+        { id: 3, name: 'DONE',
+          tasks: [
+            { id: 7, text: 'something already done #1', },
+            { id: 8, text: 'something already done #2', },
+            { id: 9, text: 'something already done #3', },
+          ] },
+      ],
+    };
+
+    successCallback(mockBoard);
+  }
+
+  /**
    * Adds a task to the backend.
    * @param {Integer} sectionId 
    * @param {String} taskText 
