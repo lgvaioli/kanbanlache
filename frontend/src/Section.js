@@ -5,6 +5,14 @@ import cloneDeep from 'lodash/cloneDeep';
 
 
 /**
+ * Task text max length.
+ * 
+ * FIXME: Maybe we should pick this up from a common backend/frontend
+ * config file.
+ */
+const TASK_TEXT_MAXLENGTH = 250;
+
+/**
  * Valid section positions.
  */
 export const SectionPosition = {
@@ -36,6 +44,9 @@ export class Section extends React.Component {
     this.state = {
       // Controlled <input> for adding tasks
       textareaValue: '',
+
+      // Characters left counter
+      charsLeft: TASK_TEXT_MAXLENGTH,
     };
   }
 
@@ -52,9 +63,10 @@ export class Section extends React.Component {
     // Update section model with a callback passed from above
     this.props.Board.addTask(this.state.textareaValue);
 
-    // Reset task input
+    // Reset task input and chars left counter
     this.setState({
       textareaValue: '',
+      charsLeft: TASK_TEXT_MAXLENGTH,
     });
   }
 
@@ -62,9 +74,13 @@ export class Section extends React.Component {
    * Callback called when the "Add task" input changes.
    * Updates the section's state.
    */
-  ontextareaValueChange = (event) => {
+  onTextareaValueChange = (event) => {
+    const textareaValue = event.target.value;
+    const charsLeft = TASK_TEXT_MAXLENGTH - textareaValue.length;
+
     this.setState({
-      textareaValue: event.target.value,
+      textareaValue: textareaValue,
+      charsLeft: charsLeft,
     });
   }
 
@@ -119,12 +135,13 @@ export class Section extends React.Component {
           <h2>{this.props.model.name}</h2>
           {tasksWidget}
         </div>
-        <div className={styles.TaskAdder}>
           {this.props.config.hasTaskAdder &&
-            <textarea onChange={this.ontextareaValueChange} value={this.state.textareaValue}/>}
-          {this.props.config.hasTaskAdder &&
-            <button id='addTaskBtn' onClick={this.onAddTaskButtonPressed}>Add task</button>}
-        </div>
+            <div className={styles.TaskAdder}>
+              <span>{this.state.charsLeft} characters left</span>
+              <textarea onChange={this.onTextareaValueChange} value={this.state.textareaValue} maxLength={TASK_TEXT_MAXLENGTH} />
+              <button id='addTaskBtn' onClick={this.onAddTaskButtonPressed}>Add task</button>
+            </div>
+          }
       </div>
     );
   }
