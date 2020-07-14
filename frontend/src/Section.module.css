@@ -47,3 +47,7 @@
 .TaskAdder button:focus {
     outline: 1px dashed hsl(33, 100%, 60%);
 }
+
+.AddTaskBtn {
+    margin-bottom: 10px;
+}

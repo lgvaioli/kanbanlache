@@ -139,7 +139,7 @@ export class Section extends React.Component {
             <div className={styles.TaskAdder}>
               <span>{this.state.charsLeft} characters left</span>
               <textarea onChange={this.onTextareaValueChange} value={this.state.textareaValue} maxLength={TASK_TEXT_MAXLENGTH} />
-              <button id='addTaskBtn' onClick={this.onAddTaskButtonPressed}>Add task</button>
+              <button className={styles.AddTaskBtn} onClick={this.onAddTaskButtonPressed}>Add task</button>
             </div>
           }
       </div>
