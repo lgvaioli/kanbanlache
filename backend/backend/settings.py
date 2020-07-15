@@ -12,6 +12,12 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 
+# Defines whether we're deploying with Docker or not.
+# If set to True, configures DATABASES to use PostgreSQL, as defined in the docker-compose.yml file.
+# If set to False, configures DATABASES to use sqlite (the Django default).
+DOCKER_DEPLOY = True
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -75,16 +81,24 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'database',
-        'PORT': 5432,
+if DOCKER_DEPLOY:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'postgres',
+            'USER': 'postgres',
+            'PASSWORD': 'postgres',
+            'HOST': 'database',
+            'PORT': 5432,
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
 
 
 # Password validation
