@@ -12,10 +12,16 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 
+
+# Defines whether we're deploying to Heroku or not.
+# Note that a Heroku deploy is mutually exclusive with a localhost deploy,
+# whether it be a manual localhost deploy or a Docker localhost deploy.
+HEROKU_DEPLOY = True
+
 # Defines whether we're deploying with Docker or not.
 # If set to True, configures DATABASES to use PostgreSQL, as defined in the docker-compose.yml file.
 # If set to False, configures DATABASES to use sqlite (the Django default).
-DOCKER_DEPLOY = True
+DOCKER_DEPLOY = False
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -147,3 +153,9 @@ STATICFILES_DIRS = (
 # Auth stuff
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+
+# Heroku deploy stuff, see https://github.com/heroku/django-heroku
+if HEROKU_DEPLOY:
+    import django_heroku
+    django_heroku.settings(locals())
