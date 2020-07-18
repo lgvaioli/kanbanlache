@@ -49,19 +49,17 @@ Follow these steps if you want to deploy to localhost with the default Django da
 
 2. Create Heroku app: `heroku create`
 
-3. Disable Django's collectstatic with: `heroku config:set DISABLE_COLLECTSTATIC=1`
-
-4. Go to your Heroku's app dashboard (https://dashboard.heroku.com/) and provision the Heroku Postgres addon. You can check it worked by running: `heroku addons`
+3. Go to your Heroku's app dashboard (https://dashboard.heroku.com/) and provision the Heroku Postgres addon. You can check it worked by running: `heroku addons`
 
 If it worked, you should see something like:
 
 heroku-postgresql (postgresql-animated-84101)  hobby-dev  free   created
  └─ as DATABASE
 
-5. Push changes to Heroku: `git push heroku`
+4. Push changes to Heroku: `git push heroku`
 
-6. Apply Django's migrations with: `heroku run "python backend/manage.py migrate"`
+5. Apply Django's migrations with: `heroku run "python backend/manage.py migrate"`
 
-7. Check that it worked by running: `heroku open`
+6. Check that it worked by running: `heroku open`
 
 If everything went fine, a browser tab should open to the running app!
