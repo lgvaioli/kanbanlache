@@ -17,9 +17,7 @@ have to modify 4 different files, which is kind of a maintenance problem.
 }
 
 .Task p {
-    /* font-weight: bold; */
     text-align: center;
-    word-break: break-all;
     font-size: 1.3em;
     color: black;
     margin-top: 15px;
