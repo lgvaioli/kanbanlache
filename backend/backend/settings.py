@@ -32,14 +32,16 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'i&kihi&nrlru+gu3sd*u#myopcs-6wp8&1eu_0-&=(+p5dmbh5'
+SECRET_KEY = os.getenv('SECRET_KEY', 'i&kihi&nrlru+gu3sd*u#myopcs-6wp8&1eu_0-&=(+p5dmbh5')
 
 # SECURITY WARNING: don't run with debug turned on in production!
+# Default deploy is Heroku
 DEBUG = False
 
 # Only set this manually if we're not deploying to Heroku, otherwise just
 # let django_heroku handle it.
 if not HEROKU_DEPLOY:
+    DEBUG = True
     ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0',]
 
 
