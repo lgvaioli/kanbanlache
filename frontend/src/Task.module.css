@@ -17,10 +17,12 @@ have to modify 4 different files, which is kind of a maintenance problem.
 }
 
 .Task p {
-    text-align: center;
+    text-align: left;
     font-size: 1.3em;
     color: black;
     margin-top: 15px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .Task button {

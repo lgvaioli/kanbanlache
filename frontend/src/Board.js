@@ -19,7 +19,7 @@ import { useMediaQuery } from 'react-responsive';
 const SECTION_LIST_SETTINGS = {
   GAP: 4,
   WIDTH_BREAKPOINT: 900,
-  MAX_WIDTH: 80,
+  MAX_WIDTH: 100,
 };
 
 
@@ -38,7 +38,7 @@ const SECTION_LIST_SETTINGS = {
  * 
  * Required props:
  *  - sectionModels: A section models array.
- *  - sectionMaxWidth: The max width a section will have (applies only to horizontal layout).
+ *  - sectionMaxWidth: The max width a section will have (applies only to vertical layout).
  *  - widthBreakpoint: The breakpoint (in pixels) which determines when to switch between horizontal
  *  and vertical layouts.
  *  - sectionsGap: The gap percentage between sections (applies only to horizontal layout).
