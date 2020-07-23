@@ -69,7 +69,8 @@ const SectionList = (props) => {
      * and blow up the stack with a 'Maximum call stack size exceeded' error :^)
      */
     let Board = cloneDeep(props.App);
-    Board.addTask = (taskText) => props.App.addTask(index, taskText);
+    Board.addTask = (taskText, successCallback, failureCallback) => props.App.addTask(index,
+      taskText, successCallback, failureCallback);
     Board.onTaskPromote = (taskIndex) => props.App.onTaskPromote(index, taskIndex);
     Board.onTaskDemote = (taskIndex) => props.App.onTaskDemote(index, taskIndex);
     Board.onTaskRemove = (taskIndex) => props.App.onTaskRemove(index, taskIndex);

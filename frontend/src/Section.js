@@ -60,14 +60,18 @@ export class Section extends React.Component {
       return alert("You can't add an empty task!");
     }
 
-    // Update section model with a callback passed from above
-    this.props.Board.addTask(this.state.textareaValue);
-
-    // Reset task input and chars left counter
-    this.setState({
-      textareaValue: '',
-      charsLeft: TASK_TEXT_MAXLENGTH,
-    });
+    // Update section model
+    this.props.Board.addTask(this.state.textareaValue,
+      () => {
+        // Success callback: Reset task input and chars left counter
+        this.setState({
+          textareaValue: '',
+          charsLeft: TASK_TEXT_MAXLENGTH,
+        });
+      },
+      () => {
+        // Failure callback: Do nothing
+      });
   }
 
   /**

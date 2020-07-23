@@ -250,8 +250,12 @@ class App extends React.Component {
    * Adds a task to the model.
    * @param {Integer} sectionIndex Index of the section where the task will be added.
    * @param {String} taskText Text of the task to be added.
+   * @param {Function} successCallback Callback to execute when the task is successfully added in the backend.
+   * The signature of this callback must be: successCallback()
+   * @param {Function} failureCallback Callback to execute when the task failed to be added in the backend.
+   * The signature of this callback must be: failureCallback()
    */
-  addTask = (sectionIndex, taskText) => {
+  addTask = (sectionIndex, taskText, successCallback, failureCallback) => {
     /**
      * Basic flow: First we try to add the task to backend. We only add the
      * task to the frontend if the backend operation was succesful.
@@ -262,9 +266,8 @@ class App extends React.Component {
       this.state.sectionModels[sectionIndex].id,
       taskText,
       (taskModel) => {
-        /**
-         * Task was added successfully to backend; update frontend.
-         */
+        // Task was added successfully to backend; call successCallback and update frontend.
+        successCallback();
 
         // Get copy of sections to enforce data immutability
         const sectionModelsNew = this.state.sectionModels.slice();
@@ -282,10 +285,8 @@ class App extends React.Component {
         });
       },
       (errorMessage) => {
-        /**
-         * Task could not be added to backend; show error message.
-         */
-
+        // Task could not be added to backend; call failureCallback and show error message.
+        failureCallback();
         alert(`Could not add task: ${errorMessage}`);
       });
   }
