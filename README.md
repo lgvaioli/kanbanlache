@@ -2,6 +2,8 @@
 
 A simple Kanban board, powered by Django and React.
 
+Checkout the [live version](https://kanbanlache.herokuapp.com/)!
+
 ## Getting Started
 
 Kanbanlache is designed to be easily deployable to Heroku, though deployment to localhost is also

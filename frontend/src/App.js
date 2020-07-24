@@ -31,9 +31,7 @@ class App extends React.Component {
 
     this.backend = new Backend();
 
-    /**
-     * Interface this component offers to its children.
-     */
+    // Interface this component offers to its children.
     this.App = {
       addTask: this.addTask,
       onTaskPromote: this.onTaskPromote,
@@ -43,6 +41,7 @@ class App extends React.Component {
     };
   }
 
+
   /**
    * Logouts user and redirects him to the login page.
    */
@@ -51,16 +50,14 @@ class App extends React.Component {
       () => {
       // Succesfully logged out, redirect
 
-      /**
-       * I know this is a hack, but look, the alternative is overriding django's auth default
-       * behavior, basically copy-and-pasting it but slightly modifying it so instead of returning
-       * a stupid 200 (OK) with data, it returns a 301 (redirect) with data pointing to the right
-       * URL as configured in backend/backend/settings.py. I think that's FAR worse than just
-       * manually "redirecting" here by changing the window location. This URL doesn't even need
-       * to be hardcoded: The program can be eventually refactored so that both this file (App.js)
-       * and backend/backend/settings.py read the LOGOUT_REDIRECT_URL variable from some common
-       * config file.
-       */
+      // I know this is a hack, but look, the alternative is overriding django's auth default
+      // behavior, basically copy-and-pasting it but slightly modifying it so instead of returning
+      // a stupid 200 (OK) with data, it returns a 301 (redirect) with data pointing to the right
+      // URL as configured in backend/backend/settings.py. I think that's FAR worse than just
+      // manually "redirecting" here by changing the window location. This URL doesn't even need
+      // to be hardcoded: The program can be eventually refactored so that both this file (App.js)
+      // and backend/backend/settings.py read the LOGOUT_REDIRECT_URL variable from some common
+      // config file.
       window.location.replace(URLS.LOGOUT_SUCCESS_REDIRECT);
     },
     (errorMessage) => {
@@ -68,6 +65,7 @@ class App extends React.Component {
       alert(`Could not log out: ${errorMessage}`);
     });
   }
+
 
   /**
    * Promotes (moves to the next section) a task.
@@ -80,10 +78,8 @@ class App extends React.Component {
       return;
     }
 
-    /**
-     * First, try to promote task in the backend. If that succeeds, update
-     * the frontend, otherwise show an error message.
-     */
+    // First, try to promote task in the backend. If that succeeds, update
+    // the frontend, otherwise show an error message.
     this.backend.promoteTask(
       this.state.sectionModels[sectionIndex].id,
       this.state.sectionModels[sectionIndex].tasks[taskIndex].id,
@@ -113,6 +109,7 @@ class App extends React.Component {
       });
   }
 
+
   /**
    * Demotes (moves to the previous section) a task.
    * @param {Integer} sectionIndex The index of the section where the task to be demoted currently lives.
@@ -124,10 +121,8 @@ class App extends React.Component {
       return;
     }
 
-    /**
-     * First, try to demote task in the backend. If that succeeds, update
-     * the frontend, otherwise show an error message.
-     */
+    // First, try to demote task in the backend. If that succeeds, update
+    // the frontend, otherwise show an error message.
     this.backend.demoteTask(
       this.state.sectionModels[sectionIndex].id,
       this.state.sectionModels[sectionIndex].tasks[taskIndex].id,
@@ -157,6 +152,7 @@ class App extends React.Component {
       });
   }
 
+
   /**
    * Removes a task.
    * @param {Integer} sectionIndex The index of the section where the task to be removed currently lives.
@@ -168,17 +164,13 @@ class App extends React.Component {
       return;
     }
 
-    /**
-     * Try to remove task from backend. If successful, remove it also from
-     * frontend, otherwise show an error message.
-     */
+    // Try to remove task from backend. If successful, remove it also from
+    // frontend, otherwise show an error message.
     this.backend.deleteTask(
       this.state.sectionModels[sectionIndex].id,
       this.state.sectionModels[sectionIndex].tasks[taskIndex].id,
       () => {
-        /**
-         * Task was successfully deleted from backend; update frontend.
-         */
+        // Task was successfully deleted from backend; update frontend.
 
         // Get copy of sections to enforce data immutability
         const sectionModelsNew = this.state.sectionModels.slice();
@@ -193,12 +185,11 @@ class App extends React.Component {
 
       },
       (errorMessage) => {
-        /**
-         * Task could not be removed from backend; show error message.
-         */
+        // Task could not be removed from backend; show error message.
         alert(`Could not remove task: ${errorMessage}`);
       });    
   }
+
 
   /**
    * Updates the text of a task.
@@ -207,30 +198,24 @@ class App extends React.Component {
    * @param {String} text New text.
    */
   onTaskUpdate = (sectionIndex, taskIndex, text) => {
-    /**
-     * Try to update task in backend; if successful, update frontend, otherwise
-     * show an error message.
-     */
+    // Try to update task in backend; if successful, update frontend, otherwise
+    // show an error message.
     this.backend.updateTask(
       this.state.sectionModels[sectionIndex].id,
       this.state.sectionModels[sectionIndex].tasks[taskIndex].id,
       text,
       (taskModel) => {
-        /**
-         * Task was succesfully updated in backend; update frontend.
-         */
+        // Task was succesfully updated in backend; update frontend.
 
         // Get copy of sections to enforce data immutability
         const sectionModelsNew = this.state.sectionModels.slice();
 
         // Update task.
-        /**
-         * FIXME: I don't like how I gotta know the details of Section/Task models
-         * to do this stuff here. I mean, App shouldn't in principle be concerned about
-         * those kind of details. I think I'm conflating the models/views and should
-         * probably separate them in a cleaner way, but for now this comment will
-         * have to be enough.
-         */
+        // FIXME: I don't like how I gotta know the details of Section/Task models
+        // to do this stuff here. I mean, App shouldn't in principle be concerned about
+        // those kind of details. I think I'm conflating the models/views and should
+        // probably separate them in a cleaner way, but for now this comment will
+        // have to be enough.
         sectionModelsNew[sectionIndex].tasks[taskIndex].text = taskModel.text;
 
         // Update state
@@ -239,12 +224,11 @@ class App extends React.Component {
         });
       },
       (errorMessage) => {
-        /**
-         * Could not update task in backend; show error message.
-         */
+        // Could not update task in backend; show error message.
         alert(`Could not update task: ${errorMessage}`);
       });
   }
+
 
   /**
    * Adds a task to the model.
@@ -256,11 +240,9 @@ class App extends React.Component {
    * The signature of this callback must be: failureCallback()
    */
   addTask = (sectionIndex, taskText, successCallback, failureCallback) => {
-    /**
-     * Basic flow: First we try to add the task to backend. We only add the
-     * task to the frontend if the backend operation was succesful.
-     */
-    
+    // Basic flow: First we try to add the task to backend. We only add the
+    // task to the frontend if the backend operation was succesful.
+
     // Make backend request
     this.backend.addTask(
       this.state.sectionModels[sectionIndex].id,
@@ -291,6 +273,7 @@ class App extends React.Component {
       });
   }
 
+
   /**
    * Initializes Board with AJAX data.
    */
@@ -299,11 +282,9 @@ class App extends React.Component {
       (boardData) => {
         // Got data successfully; update frontend with it
 
-        /**
-         * Take a look at backend/backend/views.py to see res.data's layout.
-         * I *could* describe it here, but then I would have to maintain this comment and
-         * reflect any changes I make in that file, which ain't gonna happen.
-         */
+        // Take a look at backend/backend/views.py to see res.data's layout.
+        // I *could* describe it here, but then I would have to maintain this comment and
+        // reflect any changes I make in that file, which ain't gonna happen.
         this.setState({
           boardModel: {
             id: boardData.id,
@@ -317,6 +298,7 @@ class App extends React.Component {
         alert(`Could not get board data: ${errorMessage}`);
       });
   }
+
 
   /**
    * Renders component.

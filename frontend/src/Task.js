@@ -1,8 +1,15 @@
 import React from 'react';
 import styles from './Task.module.css'
+import { G_TASK_TEXT_MAXLENGTH } from './globals';
+
 
 /**
  * Task component. Implements the front-end of Tasks.
+ * 
+ * Tasks have two modes:
+ *  - Normal mode, in which they just display the task text.
+ *  - Edit mode, in which they show a textarea with a chars left counter,
+ * which enables the user to edit the task text.
  * 
  * Required props:
  *  - Section (Object): The interface of the section to which this task belongs.
@@ -20,23 +27,31 @@ class Task extends React.Component {
   constructor(props) {
     super(props);
 
+    const taskText = this.props.model.text;
+
     this.state = {
       editMode: false,
-      textareaValue: this.props.model.text,
+      textareaValue: taskText,
+      charsLeft: G_TASK_TEXT_MAXLENGTH - taskText.length,
     };
   }
+
 
   /**
    * Toggles task edit mode on/off.
    */
   toggleEditMode = () => {
+    const taskText = this.props.model.text;
+
     this.setState({
       editMode: !this.state.editMode,
+      charsLeft: G_TASK_TEXT_MAXLENGTH - taskText.length,
     });
   }
 
+
   /**
-   * Updates task text.
+   * Updates task text when the "Update" button is clicked.
    */
   onUpdate = () => {
     if (this.state.textareaValue === '') {
@@ -47,14 +62,22 @@ class Task extends React.Component {
     this.toggleEditMode();
   }
 
+
   /**
-   * Updates task state from textarea.
+   * Updates task state when the edit mode's textarea is edited.
    */
-  onTextareaChange = (event) => {
+  onTextareaValueChange = (event) => {
+    // FIXME: Note that this code is a duplicate from Section.js.
+    // We might benefit from abstracting this into a "CountedTextarea" component.
+    const textareaValue = event.target.value;
+    const charsLeft = G_TASK_TEXT_MAXLENGTH - textareaValue.length;
+
     this.setState({
-      textareaValue: event.target.value,
+      textareaValue: textareaValue,
+      charsLeft: charsLeft,
     });
   }
+
 
   /**
    * Renders component.
@@ -67,7 +90,8 @@ class Task extends React.Component {
             <div>
               <button onClick={this.toggleEditMode}>Cancel</button>
               <button onClick={this.onUpdate}>Update</button>
-              <textarea onChange={this.onTextareaChange} defaultValue={this.props.model.text} />
+              <span>{this.state.charsLeft} characters left</span>
+              <textarea onChange={this.onTextareaValueChange} defaultValue={this.props.model.text} maxLength={G_TASK_TEXT_MAXLENGTH} />
             </div>
           :
             <div>
@@ -87,6 +111,7 @@ class Task extends React.Component {
   }
 }
 
+
 /**
  * Default props of this component.
  */
@@ -98,5 +123,6 @@ Task.defaultProps = {
     demotable: true,
   },
 };
+
 
 export default Task;

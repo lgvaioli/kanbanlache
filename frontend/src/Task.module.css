@@ -12,6 +12,13 @@ have to modify 4 different files, which is kind of a maintenance problem.
     margin-bottom: 15px;
 }
 
+.Task span {
+    display: block;
+    color: black;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
 /* FIXME: Duplicated CSS from Section.module.css */
 .Task textarea {
     display: block;

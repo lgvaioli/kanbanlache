@@ -49,25 +49,19 @@ const SectionList = (props) => {
   // Check whether screen is wide.
   const isWideScreen = useMediaQuery({ minDeviceWidth: props.widthBreakpoint });
 
-  /**
-   * Set section width according to screen size.
-   * If screen is wide, width is evenly distributed according to the number of sections.
-   * If screen isn't wide, each section takes up the whole horizontal width (i.e. 100%).
-   */
+  // Set section width according to screen size.
+  // If screen is wide, width is evenly distributed according to the number of sections.
+  // If screen isn't wide, each section takes up the whole horizontal width (i.e. 100%).
   const sectionWidthPercentage = isWideScreen ?
     ((100 / props.sectionModels.length) - props.sectionsGap) : props.sectionMaxWidth;
 
   const sectionList = props.sectionModels.map((currSection, index) => {
-    /**
-     * Create Board's interface to its children. Do note that we create this interface
-     * dynamically and tailored to each individual Task, because we rely on closure to
-     * store specific information (viz., the section index.)
-     * 
-     * We use App's interface as a base, and decorate (overwrite) the appropriate methods.
-     * 
-     * Do note that we need to make a deep copy, otherwise we descend into circular dependency hell
-     * and blow up the stack with a 'Maximum call stack size exceeded' error :^)
-     */
+    // Create Board's interface to its children. Do note that we create this interface
+    // dynamically and tailored to each individual Task, because we rely on closure to
+    // store specific information (viz., the section index.)
+    // We use App's interface as a base, and decorate (overwrite) the appropriate methods.
+    // Do note that we need to make a deep copy, otherwise we descend into circular dependency hell
+    // and blow up the stack with a 'Maximum call stack size exceeded' error :^)
     let Board = cloneDeep(props.App);
     Board.addTask = (taskText, successCallback, failureCallback) => props.App.addTask(index,
       taskText, successCallback, failureCallback);
@@ -99,11 +93,9 @@ const SectionList = (props) => {
     );
   });
 
-  /**
-   * Set section list container display dynamically.
-   * If the screen is wide, stack sections horizontally (by disallowing wrapping); otherwise,
-   * stack them vertically (by allowing wrapping).
-   */
+  // Set section list container display dynamically.
+  // If the screen is wide, stack sections horizontally (by disallowing wrapping); otherwise,
+  // stack them vertically (by allowing wrapping).
   const layout = {
     display: 'flex',
     flexWrap: isWideScreen ? 'nowrap' : 'wrap',
