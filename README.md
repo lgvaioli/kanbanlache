@@ -2,7 +2,7 @@
 
 A simple Kanban board, powered by Django and React.
 
-Checkout the [live version](https://kanbanlache.herokuapp.com/)!
+Check out the [live version](https://kanbanlache.herokuapp.com/)! (It might take a little while to load because it's hosted on Heroku's free plan.)
 
 ## Getting Started
 
@@ -63,12 +63,17 @@ If you wish to use a SECRET_KEY different from the default one, you can either m
 
 2. Create Heroku app: `heroku create`
 
-3. Go to your Heroku's app dashboard (https://dashboard.heroku.com/) and provision the Heroku Postgres addon. You can check it worked by running: `heroku addons`
+3. Go to your Heroku's app dashboard (https://dashboard.heroku.com/) and provision the Heroku Postgres addon. Check that it worked by running: `heroku addons`
 
 If it worked, you should see something like:
 
-heroku-postgresql (postgresql-animated-84101)  hobby-dev  free   created
- └─ as DATABASE
+```
+Add-on                                         Plan       Price  State
+
+heroku-postgresql (postgresql-animated-84101)  hobby-dev  free   created 
+
+└─ as DATABASE
+```
 
 4. When deploying to Heroku, you should really use a SECRET_KEY different from the default one. You can do this easily with the following command: `heroku config:set SECRET_KEY=some_strong_key` (you should obviously replace *some_strong_key* with an actual, strong key)
 
