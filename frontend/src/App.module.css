@@ -5,7 +5,7 @@
 }
 
 .App {
-    background-color: #B2AEAA;
+    background-color: #d4dadd;
     padding: 20px;
     min-height: 100vh;
 }
@@ -16,8 +16,8 @@
 }
 
 .App button {
-    background-color: hsl(270, 2%, 40%);
-    color: whitesmoke;
+    background-color: #F1F3F4;
+    color: black;
     border: none;
     border-radius: 5px;
     padding: 7px;

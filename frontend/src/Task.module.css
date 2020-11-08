@@ -6,7 +6,7 @@ have to modify 4 different files, which is kind of a maintenance problem.
 */
 
 .Task {
-    background-color: #FFBD65;
+    background-color: #c3ced4;
     border-radius: 15px;
     padding: 15px;
     margin-bottom: 15px;
@@ -47,7 +47,7 @@ have to modify 4 different files, which is kind of a maintenance problem.
 }
 
 .Task button {
-    background-color: hsl(33, 100%, 50%);
+    background-color: #b4c3ca;
     color: black;
     border: none;
     border-radius: 5px;
@@ -57,7 +57,7 @@ have to modify 4 different files, which is kind of a maintenance problem.
 }
 
 .Task button:hover {
-    background-color: hsl(33, 100%, 40%);
+    background-color: #93A7B2;
     cursor: pointer;
 }
 

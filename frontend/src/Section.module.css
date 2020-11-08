@@ -5,7 +5,7 @@
 }
 
 .Section {
-    background-color: darkorange;
+    background-color: #d4dadd;
     padding: 10px;
     width: 100%;
     height: 100%;
@@ -31,16 +31,21 @@
     transition: border 0.5s;
 }
 
+/* "characters left" text */
+.TaskAdder span {
+    color: black;
+}
+
 .TaskAdder textarea:focus {
     outline: none;
-    border: 2px hsl(39, 100%, 40%) solid;
+    border: 2px #93A7B2 solid;
 }
 
 .TaskAdder button {
     /* FIXME: Duplicated code (see Task.module.css) */
     display: inline-block;
     color: black;
-    background-color: hsl(33, 100%, 50%);
+    background-color: #b4c3ca;
     border: none;
     border-radius: 5px;
     padding: 5px;
@@ -49,12 +54,12 @@
 }
 
 .TaskAdder button:hover {
-    background-color: hsl(33, 100%, 40%);
+    background-color: #93A7B2;
     cursor: pointer;
 }
 
 .TaskAdder button:focus {
-    outline: 1px dashed hsl(33, 100%, 60%);
+    outline: 1px dashed #93A7B2;
 }
 
 .AddTaskBtn {
